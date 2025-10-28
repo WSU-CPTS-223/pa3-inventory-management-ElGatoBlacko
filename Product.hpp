@@ -2,7 +2,7 @@
 #define PRODUCT_H
 #include <string>
 #include <vector>
-
+#include <iostream>
 
 class Product{
     public:
@@ -74,8 +74,8 @@ class Product{
     }
 
 };
-std::ostream& operator<<(std::ostream& os, const Product& obj) {
-    os << "MyClass(" << obj.uniqId << ")";
-    return os;  // Always return the stream
-}
+// std::ostream& operator<<(std::ostream& os, const Product& obj) {
+//     os << "MyClass(" << obj.uniqId << ")";
+//     return os;  // Always return the stream
+// }
 #endif

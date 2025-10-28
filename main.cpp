@@ -14,7 +14,7 @@ std::vector<std::string> parseLine(const std::string& line) {
     std::string curField;
     bool inQuotes = false;
 
-    for(int i = 0; i <line.size(); i++){
+    for(std::size_t i = 0; i <line.size(); i++){
         char c = line[i];
 
         if(c == '"'){
@@ -89,7 +89,7 @@ void loadTables(HashMap<string,Product>& idMap, HashMap<string,Product>& categor
         tempProd.productDescription = fields[27];
 
         idMap.insert(tempProd.uniqId,tempProd);
-        for(int i = 0; i < tempProd.categories.size();i++){
+        for(std::size_t i = 0; i < tempProd.categories.size();i++){
             categoryMap.insert(tempProd.categories[i],tempProd);
         }
     }
@@ -127,7 +127,7 @@ void evalCommand(HashMap<string,Product>& idMap, HashMap<string,Product>& catego
         if(temp.empty()){
             cout << "Inventory/Product not found" << endl;
         }else{
-            Product item = temp.back().second;
+            Product item = temp.front().second;
             item.print();
         }
         //cout << "YET TO IMPLEMENT!" << endl;
@@ -142,10 +142,10 @@ void evalCommand(HashMap<string,Product>& idMap, HashMap<string,Product>& catego
             cout << "Invalid Category" << endl;
         }else{
             while(!temp.empty()){
-                Product item = temp.back().second;
+                Product item = temp.front().second;
                 std::cout << "uniqId               : " << item.uniqId << "\n";
                 std::cout << "productName          : " << item.productName << "\n";
-                temp.pop_back();
+                temp.pop_front();
             }
         }
 

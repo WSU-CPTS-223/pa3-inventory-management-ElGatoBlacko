@@ -4,6 +4,9 @@
 #include <list>
 #include <utility>
 #include <functional>
+#include <cstddef>
+using std::size_t;
+
 
 template<typename Key, typename Value>
 class HashMap{
@@ -11,7 +14,7 @@ private:
 
     std::list<std::pair<Key,Value>> * bucketArray;
     int elementNum;
-    int capacity;
+    size_t capacity;
     std::hash<Key> hasher;
 public:
 
@@ -27,10 +30,10 @@ public:
 
     void insert(const Key& key, const Value& value);
     void resize();
-    void print();
+    //void print();
     std::list<std::pair<Key,Value>> find(const Key& key);
     
-};
+}; 
 
 #endif
 
@@ -64,23 +67,23 @@ inline void HashMap<Key, Value>::resize()
     }
 }
 
-template <typename Key, typename Value>
-inline void HashMap<Key, Value>::print()
-{
-    std::cout << "HashMap contents:\n";
-    for (size_t i = 0; i < capacity; ++i) {
-        std::cout << "Bucket " << i << ": ";
-        if (bucketArray[i].empty()) {
-            std::cout << "(empty)";
-        } else {
-            for (std::pair<Key,Value>& kvPair : bucketArray[i]) {
-                std::cout << "[" << kvPair.first << " → "<< kvPair.second<< "] ";
-            }
-        }
-        std::cout << "\n";
-    }
+// template <typename Key, typename Value>
+// inline void HashMap<Key, Value>::print()
+// {
+//     std::cout << "HashMap contents:\n";
+//     for (size_t i = 0; i < capacity; ++i) {
+//         std::cout << "Bucket " << i << ": ";
+//         if (bucketArray[i].empty()) {
+//             std::cout << "(empty)";
+//         } else {
+//             for (std::pair<Key,Value>& kvPair : bucketArray[i]) {
+//                 std::cout << "[" << kvPair.first << " → "<< kvPair.second<< "] ";
+//             }
+//         }
+//         std::cout << "\n";
+//     }
 
-}
+// }
 
 template <typename Key, typename Value>
 inline std::list<std::pair<Key,Value>> HashMap<Key, Value>::find(const Key &key)
