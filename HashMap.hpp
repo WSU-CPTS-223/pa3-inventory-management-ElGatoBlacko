@@ -17,7 +17,7 @@ public:
 
     HashMap(){
         elementNum = 0;
-        capacity = 3;
+        capacity = 1024;
         bucketArray = new std::list<std::pair<Key,Value>>[capacity];
     }
 
@@ -28,6 +28,7 @@ public:
     void insert(const Key& key, const Value& value);
     void resize();
     void print();
+    std::list<std::pair<Key,Value>> find(const Key& key);
     
 };
 
@@ -53,7 +54,6 @@ inline void HashMap<Key, Value>::resize()
          std::list<std::pair<Key,Value>>* tempArray = new std::list<std::pair<Key,Value>>[newCapacity];
          for(size_t i = 0; i <capacity; i++){
             for(std::pair<Key,Value>& kvPair : bucketArray[i]){
-
                 newIndex = hasher(kvPair.first) % newCapacity;
                 tempArray[newIndex].push_back(kvPair);
             }
@@ -74,10 +74,23 @@ inline void HashMap<Key, Value>::print()
             std::cout << "(empty)";
         } else {
             for (std::pair<Key,Value>& kvPair : bucketArray[i]) {
-                std::cout << "[" << kvPair.first << " → " << kvPair.second << "] ";
+                std::cout << "[" << kvPair.first << " → "<< kvPair.second<< "] ";
             }
         }
         std::cout << "\n";
     }
 
+}
+
+template <typename Key, typename Value>
+inline std::list<std::pair<Key,Value>> HashMap<Key, Value>::find(const Key &key)
+{
+    size_t targHash = hasher(key) % capacity;
+    std::list<std::pair<Key,Value>> collisionless;
+    for(std::pair<Key,Value> item : bucketArray[targHash]){
+        if(item.first == key){
+            collisionless.push_back(item);
+        }
+    }
+    return collisionless;
 }
