@@ -5,6 +5,7 @@
 #include <iostream>
 
 class Product{
+    //fields for each column from csv
     public:
     std::string uniqId;
     std::string productName;
@@ -35,6 +36,7 @@ class Product{
     std::string sizeQuantityVariant;
     std::string productDescription;
 
+    //print all elements of product in neat form
     void print() {
         std::cout << "uniqId               : " << uniqId << "\n";
         std::cout << "productName          : " << productName << "\n";
@@ -74,8 +76,5 @@ class Product{
     }
 
 };
-// std::ostream& operator<<(std::ostream& os, const Product& obj) {
-//     os << "MyClass(" << obj.uniqId << ")";
-//     return os;  // Always return the stream
-// }
+
 #endif

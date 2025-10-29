@@ -7,3 +7,7 @@ We expect a fully functioninig command line REPL application for an inventory qu
 `make` will compile and execute the skeleton code
 
 Feel free to modify Makefile as you see fit.
+
+CSV Cleanup: I removed all quotation marks from fields as they were included inconsistantly, I also replaced every missing field with NA (not just missing categories).
+
+Test cases: For the insert and find test, i chose a normal insertion case to start off, ran find on its key and tested to make sure the return was correct, i then added a product with a duplicate key to and ran find on that key to test the insertion and finding with seperate chaining (used for catagory map), and finally I inserted and found a third product which had a unique key to make sure it was inserted and found correctly independently of intentional seperate chaining. For the resize I added just enough elements to constitute one resizing operation and made sure all elements still existed in the table with correct key, value, and rehashed index.

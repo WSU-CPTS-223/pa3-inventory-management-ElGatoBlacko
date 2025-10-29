@@ -7,29 +7,31 @@
 
 using namespace std;
 
-
-
+//takes in a single line and parses into each field
 std::vector<std::string> parseLine(const std::string& line) {
     std::vector<std::string> fields;
     std::string curField;
     bool inQuotes = false;
 
+    //loops through each character of the line
     for(std::size_t i = 0; i <line.size(); i++){
         char c = line[i];
 
+        //if character is quotes switch boolean state
         if(c == '"'){
             inQuotes = !inQuotes;
-        }else if(c == ',' && !inQuotes){
+        }else if(c == ',' && !inQuotes){//if we arent in quotes and theres a comma, add current string as a field
             if(curField == ""){
                 fields.push_back("NA");
-            }else{
+            }else{//
                 fields.push_back(curField);    
             }
             curField = "";
-        }else{
+        }else{//normal case, add character to current string
             curField+=c;
         }
     }
+    //at the end add whatever is left as the last field
     if(curField == ""){
         fields.push_back("NA");
         }else{
@@ -38,12 +40,15 @@ std::vector<std::string> parseLine(const std::string& line) {
     return fields;
 }
 
+//split the catagories field into the individual catagories
 std::vector<std::string> splitCategories(std::string catString){
     std::vector<std::string> result;
     std::string tok;
     std::stringstream ss(catString);
 
+    //split string by | delimiter, store token in tok
     while(std::getline(ss,tok,'|')){
+        //erase quote marks and empty space from front and back of tok and add to result vector
         tok.erase(0, tok.find_first_not_of(" \""));
         tok.erase(tok.find_last_not_of(" \"") + 1);
         result.push_back(tok);
@@ -51,12 +56,15 @@ std::vector<std::string> splitCategories(std::string catString){
     return result;
 }
 
+//load all lines of csv into tables
 void loadTables(HashMap<string,Product>& idMap, HashMap<string,Product>& categoryMap,std::ifstream& in){
     std::string line;
-    
+
     // skip header
     std::getline(in, line);
+    //while has next line put it in line string
     while(std::getline(in, line)){
+        //store fields from line into vector, put individual elements into a product object
         std::vector<std::string> fields = parseLine(line);
         Product tempProd;
         tempProd.uniqId = fields[0];
@@ -88,7 +96,9 @@ void loadTables(HashMap<string,Product>& idMap, HashMap<string,Product>& categor
         tempProd.sizeQuantityVariant = fields[26];
         tempProd.productDescription = fields[27];
 
+        //insert into idTable
         idMap.insert(tempProd.uniqId,tempProd);
+        //insert into category table, one time for each category of the product
         for(std::size_t i = 0; i < tempProd.categories.size();i++){
             categoryMap.insert(tempProd.categories[i],tempProd);
         }
@@ -122,7 +132,9 @@ void evalCommand(HashMap<string,Product>& idMap, HashMap<string,Product>& catego
     else if (line.rfind("find", 0) == 0)
     {
         // Look up the appropriate datastructure to find if the inventory exist
+        //id is the string after "find "
         string id = line.substr(5);
+        //find target item and display it
         std::list<std::pair<string,Product>> temp = idMap.find(id);
         if(temp.empty()){
             cout << "Inventory/Product not found" << endl;
@@ -130,13 +142,14 @@ void evalCommand(HashMap<string,Product>& idMap, HashMap<string,Product>& catego
             Product item = temp.front().second;
             item.print();
         }
-        //cout << "YET TO IMPLEMENT!" << endl;
     }
     // if line starts with listInventory
     else if (line.rfind("listInventory") == 0)
     {
         // Look up the appropriate datastructure to find all inventory belonging to a specific category
+        //category is string after "listInventory "
         string category = line.substr(14);
+        //find target category and display all ids and product names inside
         std::list<std::pair<string,Product>> temp = categoryMap.find(category);
         if(temp.empty()){
             cout << "Invalid Category" << endl;
@@ -148,8 +161,6 @@ void evalCommand(HashMap<string,Product>& idMap, HashMap<string,Product>& catego
                 temp.pop_front();
             }
         }
-
-        //cout << "YET TO IMPLEMENT!" << endl;
     }
 }
 
@@ -165,24 +176,10 @@ void bootStrap(HashMap<string,Product>& idMap, HashMap<string,Product>& category
     std::ifstream file("marketing_sample_for_amazon_com-ecommerce__20200101_20200131__10k_data-1.csv");
     loadTables(idMap,categoryMap,file);
     file.close();
-
-    //idMap.print();
-    //categoryMap.print();
 }
 
 int main(int argc, char const *argv[])
 {
-    // HashMap<string, string> test;
-    // test.insert("key one", "abe");
-    // test.insert("key two", "beat");
-    // test.insert("key tree", "cece");
-    // test.insert("key four", "dede");
-    // test.insert("key one", "abe2");
-    // test.insert("key two", "beat2");
-    // test.insert("key tree", "cece2");
-    // test.insert("key four", "dede2");
-    // test.print();
-    // std::list<std::pair<string,string>> temp = test.find("key tre");
     HashMap<string,Product> idTable;
     HashMap<string,Product> categoryTable;
     string line;
